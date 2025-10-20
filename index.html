@@ -96,7 +96,7 @@
     fetchBtn.addEventListener("click", async () => {
       statusDiv.textContent = "🎥 Fetching movies...";
       try {
-        const res = await fetch("http://127.0.0.1:8000/movies");
+        const res = await fetch("https://movies-zk8n.onrender.com/movies");
         const data = await res.json();
         if (data.success) {
           statusDiv.textContent = "✅ Movies fetched successfully!";
