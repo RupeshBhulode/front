@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Movie Fetcher Control</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #0f172a;
+      color: #f8fafc;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #38bdf8;
+    }
+
+    button {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 2px solid #38bdf8;
+      border-radius: 10px;
+      padding: 12px 25px;
+      margin: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background: #38bdf8;
+      color: #0f172a;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 1.1rem;
+      color: #a5f3fc;
+    }
+
+    #timer {
+      margin-top: 5px;
+      color: #facc15;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎬 Movie Fetcher Dashboard</h1>
+
+  <button id="startBtn">Start Server</button>
+  <button id="fetchBtn" disabled>Fetch Movies</button>
+
+  <div id="status"></div>
+  <div id="timer"></div>
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const fetchBtn = document.getElementById("fetchBtn");
+    const statusDiv = document.getElementById("status");
+    const timerDiv = document.getElementById("timer");
+
+    let timerInterval;
+    let seconds = 0;
+
+    startBtn.addEventListener("click", () => {
+      statusDiv.textContent = "🚀 Starting server...";
+      seconds = 0;
+      timerDiv.textContent = "";
+      fetchBtn.disabled = true;
+      startBtn.disabled = true;
+
+      // Simulate "server live" delay
+      setTimeout(() => {
+        statusDiv.textContent = "✅ Server is live!";
+        fetchBtn.disabled = false;
+
+        timerInterval = setInterval(() => {
+          seconds++;
+          timerDiv.textContent = `🕒 Live for ${seconds}s`;
+        }, 1000);
+      }, 2000);
+    });
+
+    fetchBtn.addEventListener("click", async () => {
+      statusDiv.textContent = "🎥 Fetching movies...";
+      try {
+        const res = await fetch("http://127.0.0.1:8000/movies");
+        const data = await res.json();
+        if (data.success) {
+          statusDiv.textContent = "✅ Movies fetched successfully!";
+        } else {
+          statusDiv.textContent = "⚠️ Error fetching movies: " + data.error;
+        }
+      } catch (err) {
+        statusDiv.textContent = "❌ Connection failed: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
